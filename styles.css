@@ -1,0 +1,41 @@
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html, body {
+  height:100%;
+  width:100%;
+}
+
+body {
+  font-family: 'Montserrat';
+  align-content:space-around;
+  background-color:#000000;
+  color:#FBF5F3;
+  display:grid;
+  justify-content:center;
+}
+
+.text-high {
+  color:#d6a53e;
+}
+
+
+#startGame {
+  font-family: 'Montserrat';
+  width: 100%;
+  max-width: 240px;
+  height: 10vh;
+  padding: 8px;
+  font-size: 0.85rem;
+  font-weight: 900;
+  background-color: #d6a53e;
+  color: #000000;
+  text-align: center;
+}
+
+#render-canvas {
+  display: none;
+}

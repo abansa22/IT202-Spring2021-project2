@@ -7,11 +7,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="icons/icon-192x192.png" type="image/x-icon" />
     <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css" type="text/css">
     <title>IT202 Project 2: Simple Scrolling Game</title>
   </head>
  
 
   <body>
+    <h1 style="text-align: center">Run Simrun Run</h1>
+    <div id="intro">
+        <br/>
+        <h3><span class="text-high">LEFT</span> arrow key to move left.</h3>
+        <h3><span class="text-high">RIGHT</span> arrow key to move right.</h3>
+        <h3><span class="text-high">UP</span> arrow key to move up.</h3>
+        <h3><span class="text-high">Capture Bananas</span> to get an energy (speed) boost!</h3>
+        <h3><span class="text-high">Avoid Bombs</span> as obstacles because you get killed because of them.</h3>
+        <br/>
+        <input type="button" id="startGame" value="Start Game" onclick="startGameHide()"/>
+    </div>
+    <script>
+        function startGameHide() {
+          var intro = document.getElementById("intro");
+          var renderCanvas = document.getElementById("render-canvas");
+          if (intro.style.display === "none") {
+            intro.style.display = "block";
+            renderCanvas.style.display = "none";
+          } else {
+            intro.style.display = "none";
+            renderCanvas.style.display = "block";
+          }
+        }
+    </script>
+    <canvas id="render-canvas" width="1400" height="390"></canvas>
+    <h1 id="demo"></h1>
+    <h3 id="life" style="text-align: right"></h3>
+    <h3 id="score" style="text-align: right"></h3>
+    <h3 id="level" style="text-align: right"></h3>
+
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
