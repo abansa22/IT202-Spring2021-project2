@@ -49,10 +49,10 @@ function gameStart() { // MAIN GAME LOOP
   }
 
   const bg = new Image();
-  bg.src = './assets/BG.png';
+  bg.src = './assets/bg.png';
   bg.position = { x: 0, y: 0 };
   const bg2 = new Image();
-  bg2.src = './assets/BG.png';
+  bg2.src = './assets/bg.png';
   bg2.position = { x: canvas.width, y: 0 };
   const bg3 = new Image();
   bg3.src = './assets/m1.png';
