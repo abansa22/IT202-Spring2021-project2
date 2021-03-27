@@ -44,7 +44,25 @@ function gameStart() { // MAIN GAME LOOP
     // true if collision detected
     return distance < r1 + r2;
   }
+
+  const bg = new Image();
+  bg.src = './assets/BG.png';
+  bg.position = { x: 0, y: 0 };
+  const bg2 = new Image();
+  bg2.src = './assets/BG.png';
+  bg2.position = { x: canvas.width, y: 0 };
+  const bg3 = new Image();
+  bg3.src = './assets/m1.png';
+  bg3.position = { x: 0, y: 0 };
+  const bg4 = new Image();
+  bg4.src = './assets/m1.png';
+  bg4.position = { x: canvas.width, y: 0 };
+  const bg5 = new Image();
+  bg5.src = './assets/m3.png';
+  bg5.position = { x: 0, y: 0 };
+  var backgroundImages = [bg, bg2, bg3, bg4, bg5];
   
+
   randomBombx = Math.floor(Math.random() * 900) + 500;
   
   const bombImage = new Image();
@@ -66,7 +84,7 @@ function gameStart() { // MAIN GAME LOOP
   };
   
   let score = 0;
-  let life = 2;
+  let lives = 2;
   let gamespeed = 5;
   let level = 1;
   
@@ -93,26 +111,41 @@ function gameStart() { // MAIN GAME LOOP
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
       document.getElementById("level").innerHTML = "Level: " + level;
-      document.getElementById("lives").innerHTML = "Lives left: " + life;
+      document.getElementById("lives").innerHTML = "Lives left: " + lives;
       document.getElementById("score").innerHTML = "Score: " + score;
       
-      if (life === 0){ // out of lives then game over
+      if (lives === 0){ // out of lives then game over
           document.getElementById("demo").innerHTML = "Game Over";
           return;
       }
       
       
       if (areColliding(player.x, player.y, PLAYER_RADIUS, bombImage.position.x, bombImage.position.y, BOMB_RADIUS)){ // collided with bomb, lose life
-        life -= 1;
-        bombImage.position.x = -BOMB_IMAGE_DIM-1; // hide from screen
+        lives -= 1;
+        bombImage.position.x = -BOMB_IMAGE_DIM-100; // hide from screen
       }
       
+      // update background positions
+      backgroundImages.forEach(bg => {
+        ctx.drawImage(bg, bg.position.x, bg.position.y, canvas.width, canvas.height);
+        bg.position.x -= gamespeed;
+      })
+    
+      // update bomb position
       ctx.drawImage(bombImage, bombImage.position.x, bombImage.position.y,      bombImage.position.width, bombImage.position.height);
       bombImage.position.x -= gamespeed;
 
+      // update player position
       drawCircle(player.x, player.y, PLAYER_RADIUS, 5, player.colour, PLAYER_COLOR);
       ctx.drawImage(charImage, charImage.position.x, charImage.position.y,      charImage.position.width, charImage.position.height);
       
+      backgroundImages.forEach(bg => {
+        if(bg.position.x <= -CANVAS_WIDTH){
+          bg.position.x = CANVAS_WIDTH;
+        }
+      })
+
+
       // if bomb moves out of canvas towards left then reset
       if(bombImage.position.x <= -CANVAS_WIDTH){ 
           bombImage.position.x = CANVAS_WIDTH;
@@ -151,11 +184,11 @@ function gameStart() { // MAIN GAME LOOP
       // if the player attempts to leave canvas bounds restrict them
       if (player.x < 0) {
           player.x = HALF_RADIUS;
-          charImage.position.x = HALF_CHAR_IMAGE_DIM;
+          charImage.position.x = player.x-HALF_CHAR_IMAGE_DIM+5;
       }
       else if (player.x > CANVAS_WIDTH) {
           player.x = CANVAS_WIDTH-HALF_RADIUS;
-          charImage.position.x = CANVAS_HEIGHT-HALF_CHAR_IMAGE_DIM;
+          charImage.position.x = player.x-HALF_CHAR_IMAGE_DIM+5;
       }
       
       window.addEventListener("keydown", controller.keyListener)
