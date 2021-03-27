@@ -37,7 +37,7 @@
           }
         }
     </script>
-    <canvas id="render-canvas" width="1400" height="390"></canvas>
+    <canvas id="render-canvas" width="1100" height="390"></canvas>
     <div>
       <h1 id="demo"></h1>
       <div id="lives"></div>
@@ -47,6 +47,10 @@
 
     <script src="main.js"></script>
     <script>
+      var renderCanvas = document.getElementById('render-canvas');
+      renderCanvas.width = window.innerWidth-100;
+      renderCanvas.height = Math.floor(window.innerHeight/2);
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('sw.js').then(function(registration) { // success
