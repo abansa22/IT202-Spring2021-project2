@@ -38,11 +38,14 @@
         }
     </script>
     <canvas id="render-canvas" width="1400" height="390"></canvas>
-    <h1 id="demo"></h1>
-    <h3 id="life" style="text-align: right"></h3>
-    <h3 id="score" style="text-align: right"></h3>
-    <h3 id="level" style="text-align: right"></h3>
+    <div>
+      <h1 id="demo"></h1>
+      <div id="lives"></div>
+      <div id="score"></div>
+      <div id="level"></div>
+    </div>
 
+    <script src="main.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {

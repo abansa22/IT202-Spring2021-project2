@@ -12,7 +12,7 @@ html, body {
 body {
   font-family: 'Montserrat';
   align-content:space-around;
-  background-color:#000000;
+  background-color:#111111;
   color:#FBF5F3;
   display:grid;
   justify-content:center;
@@ -26,8 +26,8 @@ body {
 #startGame {
   font-family: 'Montserrat';
   width: 100%;
-  max-width: 240px;
-  height: 10vh;
+  max-width: 200px;
+  height: 70px;
   padding: 8px;
   font-size: 0.85rem;
   font-weight: 900;
@@ -36,6 +36,21 @@ body {
   text-align: center;
 }
 
-#render-canvas {
+#game-window {
   display: none;
+}
+
+#lives {
+  color: lightcoral;
+  font-weight: 800;
+}
+
+#score {
+  color: lightgreen;
+  font-weight: 800;
+}
+
+#level {
+  color: #d6a53e;
+  font-weight: 800;
 }
