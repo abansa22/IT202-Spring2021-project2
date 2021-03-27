@@ -22,12 +22,34 @@ var CANVAS_WIDTH = 0;
 var CANVAS_HEIGHT = 0;
 
 
+function sound(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+        this.sound.play();
+    }
+    this.stop = function(){
+        this.sound.pause();
+    }    
+}
+
 function gameStart() { // MAIN GAME LOOP
+  // harm object = bomb, benefit object = banana
 
   const canvas = document.getElementById("render-canvas");
   CANVAS_WIDTH = canvas.width; // set width heigh dynamically
   CANVAS_HEIGHT = canvas.height;
   const ctx = canvas.getContext('2d');
+
+  bombSound = new sound("./sounds/bomb.wav");
+  fruitSound = new sound("./sounds/fruit.wav");
+  gameoverSound = new sound("./sounds/gameover.wav");
+  bgmSound = new sound("./sounds/bgm.mp3");
+  bgmSound.play();
   
   function drawCircle(x, y, radius, border, border_colour, fill_colour) { 
     // draw player on canvas context
@@ -124,18 +146,22 @@ function gameStart() { // MAIN GAME LOOP
       
       if (lives === 0){ // out of lives then game over
           document.getElementById("demo").innerText = "Game Over";
+          bgmSound.stop();
+          gameoverSound.play();
           return;
       }
       
       // collided with bomb, lose life
       if (areColliding(player.x, player.y, PLAYER_RADIUS, bombImage.position.x, bombImage.position.y, BOMB_RADIUS)){
         lives -= 1;
+        bombSound.play();
         bombImage.position.x = -BOMB_IMAGE_DIM-100; // hide from screen
       }
 
       // collided with banana
       if(areColliding(player.x, player.y, PLAYER_RADIUS, fruitImage.position.x, fruitImage.position.y, FRUIT_RADIUS)){
           score += 5;
+          fruitSound.play();
           if (score % 10 != 0){
               gamespeed += GAME_SPEED_UPDATE;
               level += 1;
@@ -175,18 +201,18 @@ function gameStart() { // MAIN GAME LOOP
 
       // reset bomb if out of bounds   
       if(bombImage.position.x <= -CANVAS_WIDTH){ 
-          bombImage.position.x = CANVAS_WIDTH;
+        bombImage.position.x = CANVAS_WIDTH;
       }
 
       if (controller.up && player.jumping == false) { // jump and debounce if already jumping
-          player.yVelocity -= JUMP_HEIGHT;
-          player.jumping = true;
+        player.yVelocity -= JUMP_HEIGHT;
+        player.jumping = true;
       }
       
       if (controller.left) { // move left
-          player.xVelocity -= 0.5;
-          player.x -= MOVE_DIST;
-          charImage.position.x -= MOVE_DIST;
+        player.xVelocity -= 0.5;
+        player.x -= MOVE_DIST;
+        charImage.position.x -= MOVE_DIST;
       }
       else if (controller.right) { // move right
           player.xVelocity += 0.5;
