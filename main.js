@@ -6,14 +6,17 @@ var startButton = document
 
 const PLAYER_RADIUS = 30; // player character radius size
 const HALF_RADIUS = Math.floor(PLAYER_RADIUS/2); //for offsets
-const JUMP_HEIGHT = 40; // jump height in y velocity
+const JUMP_HEIGHT = 30; // jump height in y velocity
 const FRICTION_FACTOR = 0.1; // friction factor float
 const GRAVITY = 1.5; // gravity velocity factor
 const MOVE_DIST = 5;
 const BOMB_RADIUS = 20;
+const FRUIT_RADIUS = 20;
+const FRUIT_IMAGE_DIM = 55;
 const BOMB_IMAGE_DIM = 55;
 const CHAR_IMAGE_DIM = 55;
 const HALF_CHAR_IMAGE_DIM = Math.floor(CHAR_IMAGE_DIM/2); // for char image offsets
+const GAME_SPEED_UPDATE = 1; // on level change
 var PLAYER_COLOR = "#d6a53e"; // circle player color
 var CANVAS_WIDTH = 0;
 var CANVAS_HEIGHT = 0;
@@ -64,10 +67,15 @@ function gameStart() { // MAIN GAME LOOP
   
 
   randomBombx = Math.floor(Math.random() * 900) + 500;
-  
+  randomFruitx = Math.floor(Math.random() * 900) + 500;
+
   const bombImage = new Image();
   bombImage.src = './assets/bomb.png';
   bombImage.position = { x: randomBombx, y: CANVAS_HEIGHT-BOMB_IMAGE_DIM, width: BOMB_IMAGE_DIM, height: BOMB_IMAGE_DIM};
+
+  const fruitImage = new Image();
+  fruitImage.src = './assets/fruit.png'; // banana is too long for a var name
+  fruitImage.position = { x: randomFruitx, y: CANVAS_HEIGHT-FRUIT_IMAGE_DIM, width: FRUIT_IMAGE_DIM, height: FRUIT_IMAGE_DIM};
 
   const charImage = new Image();
   charImage.src = './assets/character.png';
@@ -110,26 +118,40 @@ function gameStart() { // MAIN GAME LOOP
   function renderLoop() { // RENDER GAME LOOP
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-      document.getElementById("level").innerHTML = "Level: " + level;
-      document.getElementById("lives").innerHTML = "Lives left: " + lives;
-      document.getElementById("score").innerHTML = "Score: " + score;
+      document.getElementById("level").innerText = "Level: " + level;
+      document.getElementById("lives").innerText = "Lives left: " + lives;
+      document.getElementById("score").innerText = "Score: " + score;
       
       if (lives === 0){ // out of lives then game over
-          document.getElementById("demo").innerHTML = "Game Over";
+          document.getElementById("demo").innerText = "Game Over";
           return;
       }
       
-      
-      if (areColliding(player.x, player.y, PLAYER_RADIUS, bombImage.position.x, bombImage.position.y, BOMB_RADIUS)){ // collided with bomb, lose life
+      // collided with bomb, lose life
+      if (areColliding(player.x, player.y, PLAYER_RADIUS, bombImage.position.x, bombImage.position.y, BOMB_RADIUS)){
         lives -= 1;
         bombImage.position.x = -BOMB_IMAGE_DIM-100; // hide from screen
       }
+
+      // collided with banana
+      if(areColliding(player.x, player.y, PLAYER_RADIUS, fruitImage.position.x, fruitImage.position.y, FRUIT_RADIUS)){
+          score += 5;
+          if (score % 10 != 0){
+              gamespeed += GAME_SPEED_UPDATE;
+              level += 1;
+          }
+          fruitImage.position.x = -FRUIT_IMAGE_DIM-100;
+      }
       
-      // update background positions
+      // update background positions (first render)
       backgroundImages.forEach(bg => {
         ctx.drawImage(bg, bg.position.x, bg.position.y, canvas.width, canvas.height);
         bg.position.x -= gamespeed;
       })
+
+      // update fruit position
+      ctx.drawImage(fruitImage, fruitImage.position.x, fruitImage.position.y,      fruitImage.position.width, fruitImage.position.height);
+      fruitImage.position.x -= gamespeed;
     
       // update bomb position
       ctx.drawImage(bombImage, bombImage.position.x, bombImage.position.y,      bombImage.position.width, bombImage.position.height);
@@ -138,15 +160,20 @@ function gameStart() { // MAIN GAME LOOP
       // update player position
       drawCircle(player.x, player.y, PLAYER_RADIUS, 5, player.colour, PLAYER_COLOR);
       ctx.drawImage(charImage, charImage.position.x, charImage.position.y,      charImage.position.width, charImage.position.height);
-      
+
+      // reset background if out of bounds      
       backgroundImages.forEach(bg => {
         if(bg.position.x <= -CANVAS_WIDTH){
           bg.position.x = CANVAS_WIDTH;
         }
       })
 
+      // reset fruit if out of bounds
+      if (fruitImage.position.x <= -CANVAS_WIDTH){
+        fruitImage.position.x = CANVAS_WIDTH;
+      }
 
-      // if bomb moves out of canvas towards left then reset
+      // reset bomb if out of bounds   
       if(bombImage.position.x <= -CANVAS_WIDTH){ 
           bombImage.position.x = CANVAS_WIDTH;
       }
