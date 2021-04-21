@@ -20,7 +20,7 @@ const GAME_SPEED_UPDATE = 1; // on level change
 var PLAYER_COLOR = "#d6a53e"; // circle player color
 var CANVAS_WIDTH = 0;
 var CANVAS_HEIGHT = 0;
-
+let Touch_event = false
 
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -204,7 +204,7 @@ function gameStart() { // MAIN GAME LOOP
         bombImage.position.x = CANVAS_WIDTH;
       }
 
-      if (controller.up && player.jumping == false) { // jump and debounce if already jumping
+      if ((controller.up || Touch_event) && player.jumping == false) { // jump and debounce if already jumping
         player.yVelocity -= JUMP_HEIGHT;
         player.jumping = true;
       }
@@ -229,6 +229,7 @@ function gameStart() { // MAIN GAME LOOP
       // floor physics, against gravity
       if (player.y > CANVAS_HEIGHT-PLAYER_RADIUS) {
           player.jumping = false;
+          Touch_event = false;
           player.y = CANVAS_HEIGHT-PLAYER_RADIUS;
           charImage.position.y = CANVAS_HEIGHT-CHAR_IMAGE_DIM;
           player.yVelocity = 0;
@@ -243,7 +244,7 @@ function gameStart() { // MAIN GAME LOOP
           player.x = CANVAS_WIDTH-HALF_RADIUS;
           charImage.position.x = player.x-HALF_CHAR_IMAGE_DIM+5;
       }
-      
+      window.addEventListener("touchmove", touchEventHandler)
       window.addEventListener("keydown", controller.keyListener)
       window.addEventListener("keyup", controller.keyListener);
       window.requestAnimationFrame(renderLoop); // animate render loop
