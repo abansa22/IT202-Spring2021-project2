@@ -184,8 +184,8 @@ function gameStart() { // MAIN GAME LOOP
       bombImage.position.x -= gamespeed;
 
       // update player position
-      drawCircle(player.x, player.y, PLAYER_RADIUS, 5, player.colour, PLAYER_COLOR);
-      ctx.drawImage(charImage, charImage.position.x, charImage.position.y,      charImage.position.width, charImage.position.height);
+      drawCircle(player.x + 10, player.y, PLAYER_RADIUS, 5, player.colour, PLAYER_COLOR);
+      ctx.drawImage(charImage, charImage.position.x + 10, charImage.position.y,      charImage.position.width, charImage.position.height);
 
       // reset background if out of bounds      
       backgroundImages.forEach(bg => {
