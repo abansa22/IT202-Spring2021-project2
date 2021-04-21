@@ -48,8 +48,18 @@
     <script src="main.js"></script>
     <script>
       var renderCanvas = document.getElementById('render-canvas');
-      renderCanvas.width = window.innerWidth-100;
-      renderCanvas.height = Math.floor(window.innerHeight/2);
+      //adding desktop/tablet width
+      // console.log(window.screen.width)
+      if (window.screen.width <= 500){
+        //adding mobile width
+        renderCanvas.width = window.innerWidth -250;
+        renderCanvas.height = Math.floor(window.innerHeight/2) - 200;
+      }
+      else{
+        //adding screen width
+        renderCanvas.width = window.innerWidth-200;
+        renderCanvas.height = Math.floor(window.innerHeight/2);
+      }
 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {

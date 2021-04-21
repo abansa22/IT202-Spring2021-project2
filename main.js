@@ -21,6 +21,8 @@ var PLAYER_COLOR = "#d6a53e"; // circle player color
 var CANVAS_WIDTH = 0;
 var CANVAS_HEIGHT = 0;
 let Touch_event = false
+  
+
 
 function sound(src) {
     this.sound = document.createElement("audio");
@@ -69,6 +71,12 @@ function gameStart() { // MAIN GAME LOOP
     // true if collision detected
     return distance < r1 + r2;
   }
+
+  // function touchEventHandler (eventData) {
+  //   let tiltLR = eventData.gamma;
+  //   let tiltFB = eventData.beta;
+  //   let dir = eventData.alpha;
+  // }
 
   const bg = new Image();
   bg.src = './assets/bg.png';
@@ -137,6 +145,11 @@ function gameStart() { // MAIN GAME LOOP
       }
   };    
   
+  function touchEventHandler (eventData) {
+    // console.log("touch", eventData.touches)
+    Touch_event = true
+  }
+
   function renderLoop() { // RENDER GAME LOOP
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -168,6 +181,7 @@ function gameStart() { // MAIN GAME LOOP
           }
           fruitImage.position.x = -FRUIT_IMAGE_DIM-100;
       }
+
       
       // update background positions (first render)
       backgroundImages.forEach(bg => {
@@ -184,8 +198,8 @@ function gameStart() { // MAIN GAME LOOP
       bombImage.position.x -= gamespeed;
 
       // update player position
-      drawCircle(player.x + 10, player.y, PLAYER_RADIUS, 5, player.colour, PLAYER_COLOR);
-      ctx.drawImage(charImage, charImage.position.x + 10, charImage.position.y,      charImage.position.width, charImage.position.height);
+      drawCircle(player.x+50, player.y, PLAYER_RADIUS, 5, player.colour, PLAYER_COLOR);
+      ctx.drawImage(charImage, charImage.position.x + 50, charImage.position.y,      charImage.position.width, charImage.position.height);
 
       // reset background if out of bounds      
       backgroundImages.forEach(bg => {
@@ -204,16 +218,20 @@ function gameStart() { // MAIN GAME LOOP
         bombImage.position.x = CANVAS_WIDTH;
       }
 
+
       if ((controller.up || Touch_event) && player.jumping == false) { // jump and debounce if already jumping
         player.yVelocity -= JUMP_HEIGHT;
         player.jumping = true;
+        // console.log(Touch_event)
+        // Touch_event = false;
       }
-      
+
       if (controller.left) { // move left
         player.xVelocity -= 0.5;
         player.x -= MOVE_DIST;
         charImage.position.x -= MOVE_DIST;
       }
+
       else if (controller.right) { // move right
           player.xVelocity += 0.5;
           player.x += MOVE_DIST;
@@ -244,6 +262,8 @@ function gameStart() { // MAIN GAME LOOP
           player.x = CANVAS_WIDTH-HALF_RADIUS;
           charImage.position.x = player.x-HALF_CHAR_IMAGE_DIM+5;
       }
+      
+      // window.addEventListener("deviceorientation", deviceOrientationHandler, false)
       window.addEventListener("touchmove", touchEventHandler)
       window.addEventListener("keydown", controller.keyListener)
       window.addEventListener("keyup", controller.keyListener);
